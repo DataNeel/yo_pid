@@ -12,7 +12,7 @@ curr_time=$(ps -p $1 -o time | sed -n 2p)
 
 while [ $curr_time != $prev_time ]
 do
-    sleep 5
+    sleep 30
     a=$curr_time
     curr_time=$(ps -p $1 -o time | sed -n 2p)
     prev_time=$a
