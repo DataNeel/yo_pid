@@ -18,5 +18,5 @@ Monitor an already running PID and send a Yo to {YO_NAME} when CPU time, memory 
 
 `./yo_pid.sh -p {PID} -u {YO_NAME}`
 
-#####Author#####
+###Author###
 http://dataneel.com
