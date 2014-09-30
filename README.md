@@ -1,15 +1,13 @@
 yo_pid
 ======
-Send yourself a YO when the CPU time for a PID has stopped increasing
+Send yourself a YO when your work is done
 
-Inspired by Yoman from Andrew Duberstein
+Inspired by Yoman from Andrew Duberstein: http://www.andrewduberstein.com/item/2014/11/28/yoman/
 
-http://www.andrewduberstein.com/item/2014/11/28/yoman/
+Replace {api key} in the code with your own API key
 
-Replace {api key} in the curl data with your own API key
+usage a: "./yo_pid.sh -c '{COMMAND}' -u {YO_NAME}" to run a command and Yo when it is done
 
-usage: "./yo_pid.sh pid yo_name"
-
-Run yo_pid.sh after your process has started using CPU and tell it which yo name you would like to alert when CPU time stops increasing
+usage b: "./yo_pid.sh -p {PID} -u {YO_NAME}" to send an alert when the cpu time, memory percent, and processors in use stop changing
 
 http://dataneel.com
