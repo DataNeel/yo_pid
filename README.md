@@ -6,7 +6,7 @@ Inspired by Yoman from Andrew Duberstein
 
 http://www.andrewduberstein.com/item/2014/11/28/yoman/
 
-Replace {api key} in the curl data to your own API key
+Replace {api key} in the curl data with your own API key
 
 usage: "./yo_pid.sh pid yo_name"
 
