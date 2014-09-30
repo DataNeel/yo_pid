@@ -1,4 +1,4 @@
-yo_pid
+Yo Process Is Done (yo_pid)
 ======
 Send yourself a YO when your work is done
 
