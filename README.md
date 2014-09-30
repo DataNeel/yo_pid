@@ -4,7 +4,7 @@ Yo Process Is Done (yo_pid)
 
 > Inspired by Yoman from Andrew Duberstein: http://www.andrewduberstein.com/item/2014/11/28/yoman/
 
-####Yo API Setup###
+###Yo API Setup###
 >1. Create an account with the Yo App
 2. Obtain an API key from http://dev.justyo.co/
 3. Replace {api key} in the code with your own API key
