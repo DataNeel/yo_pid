@@ -10,11 +10,11 @@ Yo Process Is Done (yo_pid)
 3. Replace {api key} in the code with your own API key
 
 ###Usage###
-Run a command and Yo when it is done
+Run a command and send a Yo to {YO_NAME} when it is done
 
 `./yo_pid.sh -c '{COMMAND}' -u {YO_NAME}`
 
-Monitor an already running PID and Yo when CPU time, memory percent, and processor being used stop changing. This is useful if you want to know when a process stops doing work, even if the PID is still active
+Monitor an already running PID and send a Yo to {YO_NAME} when CPU time, memory percent, and processor being used stop changing. This is useful if you want to know when a process stops doing work, even if the PID is still active
 
 `./yo_pid.sh -p {PID} -u {YO_NAME}`
 
