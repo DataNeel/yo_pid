@@ -7,15 +7,15 @@ then
 fi
 
 prev_time="0"
-curr_time=$(ps -p $1 -o time,pmem,sgi_p | sed -n 2p)
+curr_time="$(ps -p $1 -o time,pmem,sgi_p | sed -n 2p)"
 
 
-while [ $curr_time != $prev_time ]
+while [ "$curr_time" != "$prev_time" ]
 do
     sleep 30
-    a=$curr_time
-    curr_time=$(ps -p $1 -o time,pmem,sgi_p | sed -n 2p)
-    prev_time=$a
+    a="$curr_time"
+    curr_time="$(ps -p $1 -o time,pmem,sgi_p | sed -n 2p)"
+    prev_time="$a"
 done
 
 curl --data "api_token={{api key}}&username=$2" http://api.justyo.co/yo/
