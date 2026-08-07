@@ -8,14 +8,9 @@ Before editing, suggest the smallest relevant set of `.obvious` files for the ta
 
 ## Codebase Map
 
-This is a single-file bash script repo with no directories. The entire codebase is two files in the repo root:
+See `.obvious/codebase-map.md` for the full directory guide.
 
-| Path | Purpose |
-|---|---|
-| `yo_pid.sh` | Main bash script — runs a command or monitors a PID, then sends a Yo notification via the Yo API |
-| `README.md` | Usage instructions and Yo API setup guide |
-
-No subdirectories, no packages, no services, no CI workflows.
+Summary: single-file bash script repo (`yo_pid.sh` + `README.md`). No subdirectories, no packages, no services, no CI workflows.
 
 ## Repo Guidance for Autobuild
 
@@ -73,6 +68,10 @@ File source provenance (`yo_pid.sh`, `README.md`) was appended to the `yo-pid` p
 ## Security Scan
 
 > **Note:** security_scan_not_triggered — `trigger_security_onboarding` tool is not available in this environment. Trigger manually if required.
+
+## Component Manifest
+
+> **Skipped:** `component-manifest-generator` skill does not apply — no `package.json` at repo root. This repo is a bash script, not a JS/TS project.
 
 ## Runbooks
 
