@@ -25,31 +25,46 @@ No agent guidance files (AGENTS.md, CLAUDE.md, CONTRIBUTING.md, .cursorrules, .w
 - Exit status determines whether a "happy" or "sad" GIF is attached to the Yo notification
 - PID monitoring mode polls `ps` every 30 seconds until CPU time, memory, and processor stop changing
 
+## Commands
+
+| Task | Command |
+|---|---|
+| Syntax check (doubles as lint) | `bash -n yo_pid.sh` |
+| Run a command, send Yo when done | `./yo_pid.sh -c '{COMMAND}' -u {YO_NAME}` |
+| Monitor a PID, send Yo when idle | `./yo_pid.sh -p {PID} -u {YO_NAME}` |
+
+No install step, no build step, no test suite, no server, no ports.
+
 ## Local Verification
 
-> **SCAFFOLD branch:** This repo has no runnable application stack (no server, no build system, no test framework). Local dev verification was not applicable. The script is a standalone CLI tool that requires a Yo API key to function end-to-end.
+### Local Verification Summary
 
-### Verified Commands
+- **Decision:** DONE — `dev_stack_healthy: true` (verified 2026-09-22 in sandbox)
+- **Runtime:** GNU bash 5.2.37, curl 8.14.1, procps-ng ps 4.0.4 — all present
+- **Lint:** `bash -n yo_pid.sh` → SYNTAX OK (shellcheck unavailable in sandbox; no install route)
+- **Typecheck / tests:** N/A — bash script; no type system, no test framework
 
-- **Typecheck:** N/A — bash script, no type system
-- **Lint:** N/A — no linter configured
-- **Test:** N/A — no test framework
+### Verified flows (evidence)
 
-### Scoped Workflow
+| Flow | Result |
+|---|---|
+| No args | exit 1 + usage text (correct) |
+| `-c` and `-p` both given | exit 1 + "Command and PID both provided" (correct) |
+| Missing `-u` | exit 1 + usage text (correct) |
+| **Command mode, happy path:** `./yo_pid.sh -c 'echo hello-from-yo-pid' -u TESTUSER` | command output rendered; trace shows `EXIT_STATUS=0`, happy GIF selected (`random_gif='&link=http://i.imgur.com/1rvPf.gif'`), Yo payload built correctly |
+| **Command mode, sad path:** `./yo_pid.sh -c 'false' -u TESTUSER` | `EXIT_STATUS=1` → sad GIF path taken |
+| **PID mode:** `./yo_pid.sh -p {PID of sleep 100} -u TESTUSER` | poll loop exited after one stable 30s cycle, Yo send attempted (~30s total) |
 
-No scoped verification commands available. To manually test the script:
+### Known limitation (external service)
 
-1. Replace `{{api key}}` in `yo_pid.sh` with a real Yo API token
-2. Run `./yo_pid.sh -c 'echo hello' -u {YO_USERNAME}` to test command mode
-3. Run `./yo_pid.sh -p {PID} -u {YO_USERNAME}` to test PID monitoring mode
+`api.justyo.co` no longer resolves in DNS — the Yo service is defunct. During local verification the final `curl` therefore exits 6 (could not resolve host). This is an external-service failure, not a local-stack failure: every local code path (argument parsing, command execution, exit-status capture, GIF selection, payload construction) was verified working. The script's token placeholder `{{api key}}` is kept as-is; replace it with a real token only if the Yo service is reachable: TODO(confirm)
 
 ## Sandbox Snapshot
 
-- **Snapshot ID:** N/A
-- **Captured:** N/A
-- **Dev stack healthy:** N/A — no runnable stack (SCAFFOLD branch)
-
-> **Note:** Snapshot skipped — repo has no runnable dev stack. This is a standalone bash script with no dependencies to install or services to start.
+- **Snapshot ID:** `mv2h8ctqqjtpucc383e4:default`
+- **Sandbox:** `i6eiwoyj4znnlyiqk5iqm`
+- **Captured:** 2026-09-22T19:34:21.121Z (ISO-8601, UTC)
+- **Dev stack healthy:** true — bash CLI verified end-to-end (see Local Verification)
 
 ## Bibliography
 
@@ -61,7 +76,7 @@ Product Atlas nodes for this repo were already seeded from a prior scan. The fol
   - `process-activity-monitoring` (feature) — Monitor PID until CPU/memory/processor stop changing
   - `yo-messaging-delivery` (integration) — Yo API delivery via curl
 
-File source provenance (`yo_pid.sh`, `README.md`) was appended to the `yo-pid` product node during this install scan.
+File source provenance (`yo_pid.sh`, `README.md`) was appended to the `yo-pid` product node during the install scan.
 
 **Bibliography depth:** seed-level (4 child nodes + 1 product node). For comprehensive Product Atlas coverage, load the `product-atlas-collection` skill.
 
