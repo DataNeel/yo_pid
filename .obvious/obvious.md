@@ -16,40 +16,41 @@ Summary: single-file bash script repo (`yo_pid.sh` + `README.md`). No subdirecto
 
 No agent guidance files (AGENTS.md, CLAUDE.md, CONTRIBUTING.md, .cursorrules, .windsurfrules) were found in this repo.
 
-**Stack:** Bash script only. No package manager, no build step, no test framework.
+**Stack:** Standalone Bash CLI script. Runtime requirements: bash (uses arrays), `curl`, `ps`. No package manager, no build step, no test framework, no CI.
 
 **Key details for agents:**
-- The script uses `getopts` for CLI argument parsing (`-c`, `-u`, `-p`)
-- It calls the Yo API at `http://api.justyo.co/yo/` via `curl`
-- The API token placeholder `{{api key}}` in `yo_pid.sh` must be replaced with a real token before use
-- Exit status determines whether a "happy" or "sad" GIF is attached to the Yo notification
-- PID monitoring mode polls `ps` every 30 seconds until CPU time, memory, and processor stop changing
+- The script uses `getopts` for CLI argument parsing (`-c` command mode, `-p` PID mode, `-u` Yo username — required)
+- It calls the Yo API at `http://api.justyo.co/yo/` via `curl` POST
+- The API token placeholder `{{api key}}` in `yo_pid.sh` must be replaced with a real token before notifications work — TODO(confirm) whether this should become an env var
+- Exit status of the `-c` command selects a "happy" (0) or "sad" (non-zero) GIF for the notification
+- PID monitoring mode polls `ps -p PID -o time,pmem,sgi_p` every 30 seconds until output stops changing (minimum ~30s wait by design)
+- The last statement is the `curl` call, so the script's exit status is curl's status, not the wrapped command's status
 
 ## Local Verification
 
-> **SCAFFOLD branch:** This repo has no runnable application stack (no server, no build system, no test framework). Local dev verification was not applicable. The script is a standalone CLI tool that requires a Yo API key to function end-to-end.
+Verified during Autobuild onboarding on 2026-09-24 (sandbox: bash 5.2.37, curl 8.14.1).
 
 ### Verified Commands
 
 - **Typecheck:** N/A — bash script, no type system
-- **Lint:** N/A — no linter configured
-- **Test:** N/A — no test framework
+- **Lint:** N/A — no linter configured; shellcheck could not be installed in the sandbox (explicit omission)
+- **Test:** N/A — no test framework; functional verification performed instead (below)
 
-### Scoped Workflow
+### Functional Verification (primary flows)
 
-No scoped verification commands available. To manually test the script:
+- Usage paths 4/4 pass: no args, invalid option, missing `-u`, both `-c`+`-p` → correct usage messages, exit 1
+- Command mode: `./yo_pid.sh -c 'echo hello from yo_pid && true' -u TestUser` → command executed, exit status captured, GIF path selected, Yo call attempted
+- PID mode: monitored a live `sleep` process → polling loop detected stable CPU/mem/processor state in ~30s and proceeded to the Yo call
 
-1. Replace `{{api key}}` in `yo_pid.sh` with a real Yo API token
-2. Run `./yo_pid.sh -c 'echo hello' -u {YO_USERNAME}` to test command mode
-3. Run `./yo_pid.sh -p {PID} -u {YO_USERNAME}` to test PID monitoring mode
+### Known Limitations
+
+- `api.justyo.co` does not resolve from the sandbox (outbound network itself works — api.github.com returned 200). The Yo service is a third-party dependency and the repo ships an `{{api key}}` placeholder, so notification delivery is not verifiable locally. TODO(confirm) whether delivery should be mocked or the service replaced.
 
 ## Sandbox Snapshot
 
-- **Snapshot ID:** N/A
-- **Captured:** N/A
-- **Dev stack healthy:** N/A — no runnable stack (SCAFFOLD branch)
-
-> **Note:** Snapshot skipped — repo has no runnable dev stack. This is a standalone bash script with no dependencies to install or services to start.
+- **Snapshot ID:** `4nvmvertxwyi0nxs1efv:default`
+- **Captured:** 2026-09-24T18:28:22.611Z
+- **Dev stack healthy:** true (CLI stack: bash + curl; no services or databases required)
 
 ## Bibliography
 
@@ -61,7 +62,7 @@ Product Atlas nodes for this repo were already seeded from a prior scan. The fol
   - `process-activity-monitoring` (feature) — Monitor PID until CPU/memory/processor stop changing
   - `yo-messaging-delivery` (integration) — Yo API delivery via curl
 
-File source provenance (`yo_pid.sh`, `README.md`) was appended to the `yo-pid` product node during this install scan.
+File source provenance (`yo_pid.sh`, `README.md`) was appended to the `yo-pid` product node during the install scan.
 
 **Bibliography depth:** seed-level (4 child nodes + 1 product node). For comprehensive Product Atlas coverage, load the `product-atlas-collection` skill.
 
